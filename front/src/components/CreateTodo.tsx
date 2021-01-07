@@ -1,7 +1,35 @@
-import { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } from "constants";
+import axios from "axios";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { textChangeRangeIsUnchanged } from "typescript";
+import { useAsync } from "react-async";
 import { CreateForm, useTodoDispatch } from "../TodoContext";
+
+async function addTodo({ text, detailText, importance }: CreateForm) {
+  console.log("im here");
+  const response = await axios.post(`http://localhost:8000/graphql`, {
+    // query: `mutation {
+    //   createTodo(text:"${text}", detailText:"${detailText}", importance:${importance}) {
+    //       { id
+    //         text
+    //         done
+    //         detailText
+    //         importance }
+    //   }
+    // }`,
+
+    query: `
+    mutation {
+      createTodo(text:${text}, detailText:${detailText}, importance:${importance}){
+          id
+          text
+          done
+          detailText
+          importance
+      }
+  }`,
+  });
+  console.log(response.data);
+  return response.data;
+}
 
 function CreateTodo() {
   const [open, setOpen] = useState(true);
@@ -9,6 +37,9 @@ function CreateTodo() {
     text: "",
     detailText: "",
     importance: 1,
+  });
+  const { data, error, isLoading, run } = useAsync({
+    deferFn: () => addTodo(inputs),
   });
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +53,7 @@ function CreateTodo() {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     dispatch({ type: "CREATE", todo: inputs });
+    run();
     setInputs({
       text: "",
       detailText: "",

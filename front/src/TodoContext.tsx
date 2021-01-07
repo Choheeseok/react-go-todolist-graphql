@@ -15,6 +15,7 @@ type CreateForm = {
 };
 
 type Action =
+  | { type: "INIT"; todos: ToDo[] }
   | {
       type: "CREATE";
       todo: CreateForm;
@@ -58,6 +59,8 @@ const initialTodos: ToDo[] = [
 
 function reducer(state: ToDo[], action: Action): ToDo[] {
   switch (action.type) {
+    case "INIT":
+      return action.todos;
     case "CREATE":
       const newTodo = { ...action.todo, id: 100, done: false };
       return state.concat(newTodo);
