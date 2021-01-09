@@ -1,46 +1,21 @@
-import axios from "axios";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { useAsync } from "react-async";
-import { CreateForm, useTodoDispatch } from "../TodoContext";
-
-async function addTodo({ text, detailText, importance }: CreateForm) {
-  console.log("im here");
-  const response = await axios.post(`http://localhost:8000/graphql`, {
-    // query: `mutation {
-    //   createTodo(text:"${text}", detailText:"${detailText}", importance:${importance}) {
-    //       { id
-    //         text
-    //         done
-    //         detailText
-    //         importance }
-    //   }
-    // }`,
-
-    query: `
-    mutation {
-      createTodo(text:${text}, detailText:${detailText}, importance:${importance}){
-          id
-          text
-          done
-          detailText
-          importance
-      }
-  }`,
-  });
-  console.log(response.data);
-  return response.data;
-}
+import {
+  CreateForm,
+  createTodo,
+  useTodoDispatch,
+  useTodoState,
+} from "../TodoContext";
 
 function CreateTodo() {
+  const state = useTodoState();
+  const dispatch = useTodoDispatch();
   const [open, setOpen] = useState(true);
   const [inputs, setInputs] = useState<CreateForm>({
     text: "",
     detailText: "",
     importance: 1,
   });
-  const { data, error, isLoading, run } = useAsync({
-    deferFn: () => addTodo(inputs),
-  });
+  const { data: todo, loading, error } = state.todo;
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,8 +27,7 @@ function CreateTodo() {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch({ type: "CREATE", todo: inputs });
-    run();
+    createTodo(dispatch, inputs);
     setInputs({
       text: "",
       detailText: "",
@@ -61,7 +35,8 @@ function CreateTodo() {
     });
   };
 
-  const dispatch = useTodoDispatch();
+  if (loading) return <div>로딩중...</div>;
+  if (error) return <div>에러 발생</div>;
   return (
     <>
       {open && (
@@ -81,7 +56,6 @@ function CreateTodo() {
             onChange={onChange}
           />
           <div className="importances">
-            낮을수록 많이 중요
             <input
               type="radio"
               name="importance"

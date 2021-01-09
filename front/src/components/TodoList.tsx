@@ -1,28 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TodoItem from "./TodoItem";
-import { useTodoDispatch, useTodoState } from "../TodoContext";
-import axios from "axios";
-import { useAsync } from "react-async";
-
-async function getTodos() {
-  const response = await axios.get(
-    `http://localhost:8000/graphql?query={getTodos{id, text, done, detailText, importance}}`
-  );
-  return response.data;
-}
+import { ToDo, getTodos, useTodoDispatch, useTodoState } from "../TodoContext";
 
 function TodoList() {
-  const todos = useTodoState();
-  const { data, error, isLoading, reload } = useAsync({
-    promiseFn: getTodos,
-  });
+  const state = useTodoState();
+  const dispatch = useTodoDispatch();
+  const { data: todos, loading, error } = state.todos;
 
-  if (isLoading) return <div>로딩중...</div>;
+  const fetchData = () => {
+    getTodos(dispatch);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) return <div>로딩중...</div>;
   if (error) return <div>에러 발생</div>;
+  if (!todos) return null;
   return (
     <>
       <ul>
-        {todos.map((toDo) => (
+        {todos.data.getTodos.map((toDo: ToDo) => (
           <TodoItem
             key={toDo.id}
             id={toDo.id}
@@ -32,7 +30,7 @@ function TodoList() {
           />
         ))}
       </ul>
-      <button onClick={reload}>다시 불러오기</button>
+      <button onClick={fetchData}>다시 불러오기</button>
     </>
   );
 }

@@ -1,4 +1,11 @@
-import React, { useReducer, createContext, useContext, Dispatch } from "react";
+import React, { useReducer, createContext, useContext } from "react";
+import * as api from "./API";
+import {
+  createAsyncDispatcher,
+  createAsyncHandler,
+  initialAsyncState,
+  StateForm,
+} from "./AsyncActionUtil";
 
 type ToDo = {
   id: number;
@@ -14,78 +21,55 @@ type CreateForm = {
   importance: number;
 };
 
-type Action =
-  | { type: "INIT"; todos: ToDo[] }
-  | {
-      type: "CREATE";
-      todo: CreateForm;
-    }
-  | {
-      type: "TOGGLE";
-    };
+type ToDoState = {
+  todos: StateForm;
+  todo: StateForm;
+};
 
-type TodoDispatch = Dispatch<Action>;
+const initialState: ToDoState = {
+  todos: initialAsyncState,
+  todo: initialAsyncState,
+};
 
-const initialTodos: ToDo[] = [
-  {
-    id: 1,
-    text: "hello",
-    done: true,
-    detailText: "안녕하세요",
-    importance: 1,
-  },
-  {
-    id: 2,
-    text: "world",
-    done: true,
-    detailText: "세상아",
-    importance: 2,
-  },
-  {
-    id: 3,
-    text: "bye",
-    done: false,
-    detailText: "잘가",
-    importance: 2,
-  },
-  {
-    id: 4,
-    text: "code",
-    done: false,
-    detailText: "코딩아",
-    importance: 1,
-  },
-];
+const todosHandler = createAsyncHandler("GET_TODOS", "todos");
+const createTodoHandler = createAsyncHandler("CREATE_TODO", "todo");
 
-function reducer(state: ToDo[], action: Action): ToDo[] {
+// action {type: "GET_TODO"}
+function reducer(state: ToDoState, action: any): ToDoState {
   switch (action.type) {
-    case "INIT":
-      return action.todos;
-    case "CREATE":
-      const newTodo = { ...action.todo, id: 100, done: false };
-      return state.concat(newTodo);
+    case "GET_TODOS":
+    case "GET_TODOS_SUCCESS":
+    case "GET_TODOS_ERROR":
+      return todosHandler(state, action);
+    case "CREATE_TODO":
+    case "CREATE_TODO_SUCCESS":
+    case "CREATE_TODO_ERROR":
+      return createTodoHandler(state, action);
     default:
-      throw new Error("Unhandled action");
+      throw new Error(`Unhandled action type ${action.type}`);
   }
 }
 
-const TodoStateContext = createContext<ToDo[] | null>(null);
-const TodoDispatchContext = createContext<TodoDispatch | null>(null);
+const TodoStateContext = createContext<ToDoState>(initialState);
+const TodoDispatchContext = createContext<Function | null>(null);
 
-function useTodoState(): ToDo[] {
+function useTodoState(): ToDoState {
   const state = useContext(TodoStateContext);
   if (!state) throw new Error("Cannot find TodoStateProvider");
   return state;
 }
 
-function useTodoDispatch(): Dispatch<Action> {
+function useTodoDispatch(): Function {
   const dispatch = useContext(TodoDispatchContext);
   if (!dispatch) throw new Error("Cannot find TodoDispatchProvider");
   return dispatch;
 }
 
+const getTodos = createAsyncDispatcher("GET_TODOS", api.getTodos);
+const createTodo = createAsyncDispatcher("CREATE_TODO", api.createTodo);
+
 function TodoProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, initialTodos);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <TodoStateContext.Provider value={state}>
@@ -96,5 +80,5 @@ function TodoProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export { useTodoState, useTodoDispatch, TodoProvider };
-export type { CreateForm };
+export { useTodoState, useTodoDispatch, getTodos, createTodo, TodoProvider };
+export type { ToDo, ToDoState, CreateForm };
