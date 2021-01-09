@@ -25,4 +25,23 @@ async function createTodo({ text, detailText, importance }: CreateForm) {
   return response.data;
 }
 
-export { getTodos, createTodo };
+type ID = {
+  id: number;
+};
+
+async function deleteTodo({ id }: ID) {
+  console.log(id);
+  const response = await axios.delete(`http://localhost:8000/graphql`, {
+    data: {
+      query: `mutation {
+      deleteTodo(id:${id}) {
+        id
+      }
+    }`,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export { getTodos, createTodo, deleteTodo };

@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 
@@ -23,6 +24,11 @@ type AddTodo struct {
 	Importance int `json:"importance"`
 }
 
+// DeleteTodo struct
+type DeleteTodo struct {
+	ID int `json:"id"`
+}
+
 // TodoList slice
 var TodoList []Todo
 
@@ -34,7 +40,7 @@ var todoType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Todo",
 	Fields: graphql.Fields{
 		"id": &graphql.Field {
-			Type: graphql.String,
+			Type: graphql.Int,
 		},
 		"text": &graphql.Field{
 			Type: graphql.String,
@@ -79,6 +85,23 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 				fmt.Println(newTodo)
 				TodoList = append(TodoList, newTodo)
 				return newTodo, nil
+			},
+		},
+		"deleteTodo": &graphql.Field{
+			Type: todoType,
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.Int),
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				for i, todo := range TodoList {
+					if todo.ID == params.Args["id"].(int){
+						TodoList = append(TodoList[:i],TodoList[i+1:]...)
+						return todo, nil
+					}
+				}
+				return nil, errors.New("ID doesn't exist")
 			},
 		},
 	},

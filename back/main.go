@@ -17,6 +17,21 @@ type postData struct {
 }
 
 func main() {
+	schema.TodoList = append(schema.TodoList, schema.Todo{
+		ID: 1,
+		Text: "타입스크립트 공부",
+		Done: false,
+		DetailText: "열심히 하자",
+		Importance: 1,
+	})
+	schema.TodoList = append(schema.TodoList, schema.Todo{
+		ID: 2,
+		Text: "밥",
+		Done: false,
+		DetailText: "먹고싶다",
+		Importance: 2,
+	})
+
 	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
     w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
@@ -40,21 +55,16 @@ func main() {
 			panic(err)
 		default:
 			fmt.Println("default \t", p.Query)
-			fmt.Println("default \t", p.Variables)
-			fmt.Println("default \t", p.Operation)
 			result := graphql.Do(graphql.Params{
 				Context: r.Context(),
 				Schema: schema.TodoSchema,
 				RequestString: p.Query,
-				VariableValues: p.Variables,
-				OperationName: p.Operation,
 			})
 			if err := json.NewEncoder(w).Encode(result); err != nil {
 				w.WriteHeader(400)
 				return
 			}
 		}
-
 	})
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){} )

@@ -1,4 +1,5 @@
 import React from "react";
+import { deleteTodo, useTodoDispatch } from "../TodoContext";
 
 type ToDoItemProps = {
   id: number;
@@ -8,12 +9,17 @@ type ToDoItemProps = {
 };
 
 function TodoItem({ id, text, done, importance }: ToDoItemProps) {
+  const dispatch = useTodoDispatch();
+  const onClick = () => {
+    deleteTodo(dispatch, { id });
+  };
   return (
     <>
       <li>
-        <span>{done}</span>
         <h3>{text}</h3>
+        {done ? <span>완료</span> : <span>미완</span>}
         <h5>{importance}</h5>
+        <button onClick={onClick}>삭제</button>
       </li>
     </>
   );
