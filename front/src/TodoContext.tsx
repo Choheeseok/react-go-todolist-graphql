@@ -34,6 +34,7 @@ const initialState: ToDoState = {
 const todosHandler = createAsyncHandler("GET_TODOS", "todos");
 const createTodoHandler = createAsyncHandler("CREATE_TODO", "todo");
 const deleteTodoHandler = createAsyncHandler("DELETE_TODO", "todo");
+const updateTodoHandler = createAsyncHandler("UPDATE_TODO", "todo");
 
 // action {type: "GET_TODO"}
 function reducer(state: ToDoState, action: any): ToDoState {
@@ -50,6 +51,10 @@ function reducer(state: ToDoState, action: any): ToDoState {
     case "DELETE_TODO_SUCCESS":
     case "DELETE_TODO_ERROR":
       return deleteTodoHandler(state, action);
+    case "UPDATE_TODO":
+    case "UPDATE_TODO_SUCCESS":
+    case "UPDATE_TODO_ERROR":
+      return updateTodoHandler(state, action);
     default:
       throw new Error(`Unhandled action type ${action.type}`);
   }
@@ -73,6 +78,7 @@ function useTodoDispatch(): Function {
 const getTodos = createAsyncDispatcher("GET_TODOS", api.getTodos);
 const createTodo = createAsyncDispatcher("CREATE_TODO", api.createTodo);
 const deleteTodo = createAsyncDispatcher("DELETE_TODO", api.deleteTodo);
+const updateTodo = createAsyncDispatcher("UPDATE_TODO", api.updateTodo);
 
 function TodoProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -92,6 +98,7 @@ export {
   getTodos,
   createTodo,
   deleteTodo,
+  updateTodo,
   TodoProvider,
 };
 export type { ToDo, ToDoState, CreateForm };

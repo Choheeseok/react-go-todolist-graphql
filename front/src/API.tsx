@@ -25,12 +25,11 @@ async function createTodo({ text, detailText, importance }: CreateForm) {
   return response.data;
 }
 
-type ID = {
+type DeleteForm = {
   id: number;
 };
 
-async function deleteTodo({ id }: ID) {
-  console.log(id);
+async function deleteTodo({ id }: DeleteForm) {
   const response = await axios.delete(`http://localhost:8000/graphql`, {
     data: {
       query: `mutation {
@@ -40,8 +39,28 @@ async function deleteTodo({ id }: ID) {
     }`,
     },
   });
-  console.log(response.data);
   return response.data;
 }
 
-export { getTodos, createTodo, deleteTodo };
+type UpdateForm = {
+  id: number;
+  done: boolean;
+};
+
+async function updateTodo({ id, done }: UpdateForm) {
+  console.log(id, done);
+  const response = await axios.put(`http://localhost:8000/graphql`, {
+    query: `mutation {
+      updateTodo(id:${id}, done:${done}) {
+        id
+        text
+        done
+        detailText
+        importance 
+      }
+    }`,
+  });
+  return response.data;
+}
+
+export { getTodos, createTodo, deleteTodo, updateTodo };

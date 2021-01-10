@@ -104,6 +104,26 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 				return nil, errors.New("ID doesn't exist")
 			},
 		},
+		"updateTodo": &graphql.Field{
+			Type: todoType,
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Type: graphql.NewNonNull(graphql.Int),
+				},
+				"done": &graphql.ArgumentConfig{
+					Type: graphql.Boolean,
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				for i := range TodoList {
+					if TodoList[i].ID == params.Args["id"].(int) {
+						TodoList[i].Done = params.Args["done"].(bool);
+						return TodoList[i], nil
+					}
+				}
+				return nil, errors.New("ID doesn't exist")
+			},
+		},
 	},
 })
 
