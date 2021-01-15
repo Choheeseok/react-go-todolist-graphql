@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { deleteTodo, updateTodo, useTodoDispatch } from "../TodoContext";
 
 type ToDoItemProps = {
@@ -20,7 +21,7 @@ function TodoItem({ id, text, done: originDone, importance }: ToDoItemProps) {
   return (
     <>
       <li>
-        <h3>{text}</h3>
+        <Link to={`/${id}`}>{text}</Link>
         <button onClick={onClickUpdate}>{originDone ? "미완" : "완료"}</button>
         <h5>{importance}</h5>
         <button onClick={onClickDelete}>삭제</button>

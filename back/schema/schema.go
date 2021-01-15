@@ -136,6 +136,22 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 				return TodoList, nil
 			},
 		},
+		"getTodo": &graphql.Field {
+			Type: todoType,
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Type : graphql.NewNonNull(graphql.Int),
+				},
+			},
+			Resolve: func (params graphql.ResolveParams) (interface{}, error) {
+				for _, todo := range TodoList {
+					if todo.ID == params.Args["id"].(int) {
+						return todo, nil
+					}
+				}
+				return nil, errors.New("ID doesn't exist")
+			},
+		},
 	},
 })
 

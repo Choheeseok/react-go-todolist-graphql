@@ -9,7 +9,7 @@ import {
 function CreateTodo() {
   const state = useTodoState();
   const dispatch = useTodoDispatch();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [inputs, setInputs] = useState<CreateForm>({
     text: "",
     detailText: "",
@@ -33,13 +33,18 @@ function CreateTodo() {
       detailText: "",
       importance: 1,
     });
+    setOpen(false);
+  };
+
+  const onWriteButtonClick = () => {
+    setOpen(true);
   };
 
   if (loading) return <div>로딩중...</div>;
   if (error) return <div>에러 발생</div>;
   return (
     <>
-      {open && (
+      {open ? (
         <form onSubmit={onSubmit}>
           <input
             type="text"
@@ -87,6 +92,8 @@ function CreateTodo() {
           </div>
           <button type="submit">완료</button>
         </form>
+      ) : (
+        <button onClick={onWriteButtonClick}>할 일 추가</button>
       )}
     </>
   );
