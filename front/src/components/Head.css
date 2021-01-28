@@ -1,0 +1,24 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  background-color: #75cfb8;
+  align-items: center;
+}
+
+.title {
+  font-size: 4rem;
+  color: #f6f5f5;
+  margin: 0.5rem 0;
+}
+
+.date {
+  margin: 0.5rem 0;
+  color: #f8f1f1;
+}
+
+.task-left {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #f8f1f1;
+}

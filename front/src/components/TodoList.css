@@ -1,0 +1,23 @@
+.lists {
+  display: flex;
+  flex-direction: column;
+  background-color: #bbdfc8;
+  align-items: flex-start;
+  margin: 0;
+}
+
+.btn {
+  border-radius: 2px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.btn:hover {
+  color: #fff;
+  background: #686868;
+  transition: all 0.3s ease-out;
+}

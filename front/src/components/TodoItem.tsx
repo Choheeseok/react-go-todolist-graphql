@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { deleteTodo, updateTodo, useTodoDispatch } from "../TodoContext";
+import "./TodoItem.css";
 
 type ToDoItemProps = {
   id: number;
@@ -21,10 +22,16 @@ function TodoItem({ id, text, done: originDone, importance }: ToDoItemProps) {
   return (
     <>
       <li>
-        <Link to={`/${id}`}>{text}</Link>
-        <button onClick={onClickUpdate}>{originDone ? "미완" : "완료"}</button>
-        <h5>{importance}</h5>
-        <button onClick={onClickDelete}>삭제</button>
+        <span className="importance">{importance}</span>
+        <Link className="text" to={`/${id}`}>
+          {text}
+        </Link>
+        <button className="btn" onClick={onClickUpdate}>
+          {originDone ? "미완" : "완료"}
+        </button>
+        <button className="btn" onClick={onClickDelete}>
+          삭제
+        </button>
       </li>
     </>
   );

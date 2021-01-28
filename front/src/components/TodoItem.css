@@ -1,0 +1,30 @@
+.importance {
+  display: flex;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0.5rem;
+}
+
+.text {
+  display: flex;
+  font-weight: bold;
+  text-decoration: none;
+  color: #03506f;
+}
+
+.btn {
+  border-radius: 2px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #f0e5d8;
+}
+
+.btn:hover {
+  color: #f0e5d8;
+  background: #686868;
+  transition: all 0.3s ease-out;
+}

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { getTodo, useTodoDispatch, useTodoState } from "../TodoContext";
+import "./TodoDetail.css";
 
 function TodoDetail({ id }: { id: number }) {
   const state = useTodoState();
@@ -15,11 +16,15 @@ function TodoDetail({ id }: { id: number }) {
   if (!todo) return null;
 
   return (
-    <>
-      <h1>{todo.data.getTodo.text}</h1>
-      <h3>중요도 : {todo.data.getTodo.importance}</h3>
-      {todo.data.getTodo.done ? <h5>완료</h5> : <h5>미완료</h5>}
-    </>
+    <div className="detail">
+      <h1 className="text">{todo.data.getTodo.text}</h1>
+      <h3 className="importance">중요도 : {todo.data.getTodo.importance}</h3>
+      {todo.data.getTodo.done ? (
+        <h5 className="completed-true">완료</h5>
+      ) : (
+        <h5 className="completed-false">미완료</h5>
+      )}
+    </div>
   );
 }
 

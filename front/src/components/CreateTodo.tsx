@@ -5,6 +5,7 @@ import {
   useTodoDispatch,
   useTodoState,
 } from "../TodoContext";
+import "./CreateTodo.css";
 
 function CreateTodo() {
   const state = useTodoState();
@@ -47,6 +48,7 @@ function CreateTodo() {
       {open ? (
         <form onSubmit={onSubmit}>
           <input
+            className="textInput"
             type="text"
             name="text"
             placeholder="할 일 입력"
@@ -54,6 +56,7 @@ function CreateTodo() {
             onChange={onChange}
           />
           <input
+            className="textInput"
             type="text"
             name="detailText"
             placeholder="세부사항"
@@ -62,6 +65,7 @@ function CreateTodo() {
           />
           <div className="importances">
             <input
+              className="radio"
               type="radio"
               name="importance"
               value={1}
@@ -69,6 +73,7 @@ function CreateTodo() {
             />
             1순위
             <input
+              className="radio"
               type="radio"
               name="importance"
               value={2}
@@ -76,6 +81,7 @@ function CreateTodo() {
             />
             2순위
             <input
+              className="radio"
               type="radio"
               name="importance"
               value={3}
@@ -83,6 +89,7 @@ function CreateTodo() {
             />
             3순위
             <input
+              className="radio"
               type="radio"
               name="importance"
               value={4}
@@ -90,10 +97,14 @@ function CreateTodo() {
             />
             4순위
           </div>
-          <button type="submit">완료</button>
+          <button className="btn" type="submit">
+            완료
+          </button>
         </form>
       ) : (
-        <button onClick={onWriteButtonClick}>할 일 추가</button>
+        <button className="btn" onClick={onWriteButtonClick}>
+          할 일 추가
+        </button>
       )}
     </>
   );

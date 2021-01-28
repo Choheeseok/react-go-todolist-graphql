@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import TodoItem from "./TodoItem";
 import { ToDo, getTodos, useTodoDispatch, useTodoState } from "../TodoContext";
+import "./TodoList.css";
 
 function TodoList() {
   const state = useTodoState();
@@ -19,7 +20,7 @@ function TodoList() {
   if (!todos) return null;
   return (
     <>
-      <ul>
+      <ul className="lists">
         {todos.data.getTodos.map((toDo: ToDo) => (
           <TodoItem
             key={toDo.id}
@@ -30,7 +31,9 @@ function TodoList() {
           />
         ))}
       </ul>
-      <button onClick={fetchData}>다시 불러오기</button>
+      <button className="btn" onClick={fetchData}>
+        다시 불러오기
+      </button>
     </>
   );
 }

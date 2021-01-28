@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import TodoDetail from "../components/TodoDetail";
+import "../components/TodoDetail.css";
 
 // props의 id를 type으로 받는 법 ?
 function Detail(props: any) {
@@ -9,7 +10,9 @@ function Detail(props: any) {
   return (
     <>
       <TodoDetail id={id} />
-      <Link to="/">뒤로가기</Link>
+      <Link className="text" to="/">
+        뒤로가기
+      </Link>
     </>
   );
 }
